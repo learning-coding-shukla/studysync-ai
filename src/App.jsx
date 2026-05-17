@@ -14,8 +14,7 @@ import {
 // 2. Add your key: VITE_GEMINI_API_KEY=your_actual_api_key_here
 // 3. Change the line below to: const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // Kept empty so Canvas injects it automatically
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 // Helper to clean markdown formatting from JSON responses
 const cleanAndParseJSON = (text) => {
   try {
