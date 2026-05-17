@@ -14,7 +14,7 @@ import {
 // 2. Add your key: VITE_GEMINI_API_KEY=your_actual_api_key_here
 // 3. Change the line below to: const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // Kept empty so Canvas injects it automatically
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 // Helper to clean markdown formatting from JSON responses
 const cleanAndParseJSON = (text) => {
@@ -71,12 +71,20 @@ const callGeminiAPI = async (prompt, isJson = false, fileData = null, retries = 
         body: JSON.stringify(payload)
       });
       
-      const result = await response.json();
-      if (result.candidates && result.candidates[0]?.content?.parts?.[0]?.text) {
-        const text = result.candidates[0].content.parts[0].text;
-        return isJson ? cleanAndParseJSON(text) : text;
-      }
-      throw new Error("Invalid response structure from API");
+     const result = await response.json();
+
+console.log(result);
+
+if (!response.ok) {
+  throw new Error(result.error?.message || "API request failed");
+}
+
+if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+  const text = result.candidates[0].content.parts[0].text;
+  return isJson ? cleanAndParseJSON(text) : text;
+}
+
+throw new Error("Unexpected Gemini response");
     } catch (error) {
       if (i === retries) throw error;
       await new Promise(res => setTimeout(res, 1000 * Math.pow(2, i))); // Exponential backoff
