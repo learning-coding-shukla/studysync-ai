@@ -12,8 +12,8 @@ import {
 // To run this app locally or publish it on platforms like Vercel:
 // 1. Create a `.env` file in your local project root.
 // 2. Add your key: VITE_GEMINI_API_KEY=your_actual_api_key_here
-// 3. Change the line below to: const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // Kept empty so Canvas injects it automatically
+// 3. The app reads the key from `import.meta.env.VITE_GEMINI_API_KEY` at runtime.
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 // Helper to clean markdown formatting from JSON responses
 const cleanAndParseJSON = (text) => {
@@ -70,9 +70,8 @@ const callGeminiAPI = async (prompt, isJson = false, fileData = null, retries = 
         body: JSON.stringify(payload)
       });
       
-     const result = await response.json();
-
-console.log(result);
+      const result = await response.json();
+      console.log("Gemini response:", result);
 
 if (!response.ok) {
   throw new Error(result.error?.message || "API request failed");
